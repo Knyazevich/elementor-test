@@ -2,9 +2,26 @@
 
 namespace TwentyTwentyChild;
 
+use TwentyTwentyChild\User\UserHelpers;
+
 class TwentyTwentyChild {
   public function __construct() {
+    $this->loadDependencies();
+
     add_action('wp_enqueue_scripts', [ $this, 'enqueueParentStyles' ]);
+    add_action('after_setup_theme', [ $this, 'hideWPDashboardForTestUser' ]);
+  }
+
+  private function loadDependencies() {
+    spl_autoload_register(function ($className) {
+      if(strpos($className, "TwentyTwentyChild") !== false) {
+        $className = str_replace("TwentyTwentyChild", "", $className);
+        $className = ltrim(str_replace("\\", "/", $className), "/");
+        $className = strtolower(str_replace("_", "-", $className));
+
+        include $className . '.php';
+      }
+    });
   }
 
   /**
@@ -25,5 +42,11 @@ class TwentyTwentyChild {
       [ 'twentytwenty-style' ],
       $theme->get('Version')
     );
+  }
+
+  function hideWPDashboardForTestUser(): void {
+    if (UserHelpers::isCurrentUserTestUser()) {
+      show_admin_bar(false);
+    }
   }
 }

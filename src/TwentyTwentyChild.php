@@ -2,7 +2,9 @@
 
 namespace TwentyTwentyChild;
 
+use TwentyTwentyChild\Api\V1\RestAPI;
 use TwentyTwentyChild\Product\ProductPostType;
+use TwentyTwentyChild\Product\ProductSettings;
 use TwentyTwentyChild\User\UserHelpers;
 
 class TwentyTwentyChild {
@@ -10,13 +12,13 @@ class TwentyTwentyChild {
     $this->loadDependencies();
 
     add_action('wp_enqueue_scripts', [ $this, 'enqueueParentStyles' ]);
-    add_action('after_setup_theme', [$this, 'setupTheme']);
+    add_action('after_setup_theme', [ $this, 'setupTheme' ]);
     add_action('after_setup_theme', [ $this, 'hideWPDashboardForTestUser' ]);
   }
 
   private function loadDependencies(): void {
     spl_autoload_register(function ($className) {
-      if(strpos($className, "TwentyTwentyChild") !== false) {
+      if (strpos($className, "TwentyTwentyChild") !== false) {
         $className = str_replace("TwentyTwentyChild", "", $className);
         $className = ltrim(str_replace("\\", "/", $className), "/");
         $className = strtolower(str_replace("_", "-", $className));
@@ -26,6 +28,8 @@ class TwentyTwentyChild {
     });
 
     new ProductPostType();
+    new RestAPI();
+    new ProductSettings();
   }
 
   /**

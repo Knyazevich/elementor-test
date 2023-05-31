@@ -31,7 +31,7 @@ class ProductPostType {
       'supports' => [ 'title', 'author', 'thumbnail', 'editor', 'excerpt', 'page-attributes', 'custom-fields' ],
       'public' => true,
       'hierarchical' => false,
-      'show_ui' => true,
+      'show_ui' => false,
       'has_archive' => true,
       'publicly_queryable' => true,
       'capability_type' => 'page',
@@ -61,6 +61,8 @@ class ProductPostType {
         'menu_name' => esc_html__('Categories', 'twentytwentychild'),
       ],
       'show_ui' => true,
+      'public' => true,
+      'show_in_rest' => true,
     ]);
   }
 }
